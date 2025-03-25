@@ -29,7 +29,7 @@ irrCalcUI <- function(id) {
           placement = "right"
         ),
         bs4Dash::tooltip(
-          numericInput(ns("current_age"), "Current Age", value = 45, min = 18, max = 100),
+          numericInput(ns("current_age"), "Current Age", value = 50, min = 18, max = 100),
           title = "Enter your current age in years.",
           placement = "right"
         ),
@@ -39,12 +39,12 @@ irrCalcUI <- function(id) {
           placement = "right"
         ),
         bs4Dash::tooltip(
-          autonumericInput(inputId = ns("salary"), label = "Current Monthly Salary (USD):", value = 250000, decimalPlaces = 0, digitGroupSeparator = ","),
+          autonumericInput(inputId = ns("salary"), label = "Current Monthly Salary (KES):", value = 65000, decimalPlaces = 0, digitGroupSeparator = ","),
           title = "Enter your current monthly salary.",
           placement = "right"
         ),
         bs4Dash::tooltip(
-          numericInput(ns("contribution_rate"), "Total Contribution Rate (%)", value = 25, min = 0, max = 100),
+          numericInput(ns("contribution_rate"), "Total Contribution Rate (%)", value = 30, min = 0, max = 100),
           title = "Enter the percentage of your salary that you contribute to your retirement fund.",
           placement = "right"
         ),
@@ -54,12 +54,12 @@ irrCalcUI <- function(id) {
           placement = "right"
         ),
         bs4Dash::tooltip(
-          numericInput(ns("salary_escalation"), "Salary Escalation (%)", value = 3, min = 0, max = 100),
+          numericInput(ns("salary_escalation"), "Salary Escalation (%)", value = 8, min = 0, max = 100),
           title = "Enter the expected annual increase in your salary.",
           placement = "right"
         ),
         bs4Dash::tooltip(
-          autonumericInput(inputId = ns("fund_balance"), label = "Current Fund Balance (USD):", value = 8000000, decimalPlaces = 0, digitGroupSeparator = ","),
+          autonumericInput(inputId = ns("fund_balance"), label = "Current Fund Balance (KES):", value = 10000000, decimalPlaces = 0, digitGroupSeparator = ","),
           title = "Enter the current balance of your retirement fund.",
           placement = "right"
         )
@@ -68,22 +68,22 @@ irrCalcUI <- function(id) {
         status = "success",
         title = "Retirement Income & Assumptions", width = 6, height = "700px",
         bs4Dash::tooltip(
-          autonumericInput(inputId = ns("social_security"), label = "Social Security (USD/year):", value = 20000, decimalPlaces = 0, digitGroupSeparator = ","),
-          title = "Enter your expected annual Social Security benefit in USD.",
+          autonumericInput(inputId = ns("social_security"), label = "Social Security (KES/year):", value = 80000, decimalPlaces = 0, digitGroupSeparator = ","),
+          title = "Enter your expected annual Social Security benefit in KES.",
           placement = "right"
         ),
         bs4Dash::tooltip(
-          autonumericInput(inputId = ns("pension_income"), label = "Pension (USD/year):", value = 10000, decimalPlaces = 0, digitGroupSeparator = ","),
-          title = "Enter your expected annual pension income in USD.",
+          autonumericInput(inputId = ns("pension_income"), label = "Pension (KES/year):", value = 200000, decimalPlaces = 0, digitGroupSeparator = ","),
+          title = "Enter your expected annual pension income in KES.",
           placement = "right"
         ),
         bs4Dash::tooltip(
-          autonumericInput(inputId = ns("savings_withdrawal"), label = "Retirement Savings Withdrawal (USD/year):", value = 25000, decimalPlaces = 0, digitGroupSeparator = ","),
-          title = "Enter the expected annual withdrawal from your retirement savings in USD.",
+          autonumericInput(inputId = ns("savings_withdrawal"), label = "Retirement Savings Withdrawal (KES/year):", value = 90000, decimalPlaces = 0, digitGroupSeparator = ","),
+          title = "Enter the expected annual withdrawal from your retirement savings in KES.",
           placement = "right"
         ),
         bs4Dash::tooltip(
-          numericInput(ns("desired_IRR"), "Desired Income Replacement Ratio (%)", value = 80, min = 0, max = 100),
+          numericInput(ns("desired_IRR"), "Desired Income Replacement Ratio (%)", value = 55, min = 0, max = 100),
           title = "Enter the desired percentage of your pre-retirement income you wish to replace during retirement.",
           placement = "right"
         ),
@@ -212,12 +212,12 @@ irrCalcServer <- function(id) {
       incProgress(0.1, detail = "Calculating income details...")
       # Annual pre-retirement income computed from monthly salary
       annual_income <- input$salary * 12
-      # Desired income replacement value (in USD/year)
+      # Desired income replacement value (in KES/year)
       desired_IRR_value <- annual_income * (input$desired_IRR / 100)
       
       # Step 2: Compute Total Retirement Income
       incProgress(0.15, detail = "Summing income streams...")      
-      # Total Retirement Income streams (USD/year)
+      # Total Retirement Income streams (KES/year)
       total_ret_income <- input$social_security + input$pension_income + input$savings_withdrawal
       
       # Step 3: Tax Adjustments
@@ -246,9 +246,9 @@ irrCalcServer <- function(id) {
       # ---------------------------
       output$income_ratio_title <- renderUI({
         # Use rounded values for display
-        desired_disp <- scales::dollar(round(desired_IRR_value_adj, 0))
-        after_tax_disp <- scales::dollar(round(after_tax_income_adj, 0))
-        shortfall_disp <- scales::dollar(round(shortfall, 0))
+        desired_disp <- scales::dollar(round(desired_IRR_value_adj, 0), prefix = "KES ")
+        after_tax_disp <- scales::dollar(round(after_tax_income_adj, 0), prefix = "KES ")
+        shortfall_disp <- scales::dollar(round(shortfall, 0), prefix = "KES ")
         
         if (shortfall > 0) {
           HTML(paste0(
@@ -281,11 +281,11 @@ irrCalcServer <- function(id) {
         HTML(paste0(
           "<div style='font-family: \"Nunito\", sans-serif; font-size: 16px; color: #333; line-height: 1.5;'>",
             "<ul style='list-style-type: none; padding-left: 0;'>",
-              "<li style='margin-bottom: 10px;'><strong>Total Retirement Income:</strong> ", scales::dollar(total_ret_income), " per year</li>",
-              "<li style='margin-bottom: 10px;'><strong>After-Tax Income:</strong> ", scales::dollar(after_tax_income), " per year</li>",
-              "<li style='margin-bottom: 10px;'><strong>Desired IRR (Annual Replacement):</strong> ", scales::dollar(desired_IRR_value), " per year</li>",
+              "<li style='margin-bottom: 10px;'><strong>Total Retirement Income:</strong> ", scales::dollar(total_ret_income, prefix = "KES "), " per year</li>",
+              "<li style='margin-bottom: 10px;'><strong>After-Tax Income:</strong> ", scales::dollar(after_tax_income, prefix = "KES "), " per year</li>",
+              "<li style='margin-bottom: 10px;'><strong>Desired IRR (Annual Replacement):</strong> ", scales::dollar(desired_IRR_value, prefix = "KES "), " per year</li>",
               "<li style='margin-bottom: 10px;'><strong>Inflation Factor (over ", years_to_retirement, " years):</strong> ", round(inflation_factor, 2), "</li>",
-              "<li style='margin-bottom: 20px;'><strong>Shortfall:</strong> ", scales::dollar(shortfall), " per year</li>",
+              "<li style='margin-bottom: 20px;'><strong>Shortfall:</strong> ", scales::dollar(shortfall, prefix = "KES "), " per year</li>",
             "</ul>",
           "</div>"
         ))
@@ -306,6 +306,20 @@ irrCalcServer <- function(id) {
         } else {
           "bg-success"
         }
+          # Determine descriptive text based on ratio
+        replacement_text <- if (ratio < 60) {
+          "Insufficient"
+        } else if (ratio < 80) {
+          "Adequate"
+        } else {
+          "Sufficient"
+        }
+        # Create the UI output with a descriptive message and the progress bar
+        tagList(
+          tags$div(
+            style = "margin-bottom: 10px; font-size: 22px; font-weight: bold;",
+            paste0("Your Income Replacement Ratio is ", replacement_text, ": ", ratio, "%")
+          ),
         tags$div(
           class = "progress",
           style = "height: 30px; margin-bottom: 20px;",
@@ -318,6 +332,7 @@ irrCalcServer <- function(id) {
             `aria-valuemax` = 100,
             paste0(ratio, "%")
           )
+         )
         )
       })
       

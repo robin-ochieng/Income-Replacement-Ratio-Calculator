@@ -5,13 +5,6 @@ irrCalcUI <- function(id) {
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(width = 12, align = "left",
-            div(class = "logos",
-                img(src = "images/kenbright.png")
-            )
-      )
-    ),
-    fluidRow(
       column(
         width = 12,
         div(

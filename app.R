@@ -41,31 +41,10 @@ ui <- dashboardPage(
   dashboardHeader(
     disable = TRUE,
     fixed = FALSE,
-    sidebarIcon = NULL
-    #title = dashboardBrand(
-    #  title = tags$div(
-    #    class = "text-center header-title-container",
-    #    tags$h4("Financial & Retirement Planning Workbench", class = "header-title")
-    #  )
-    #),
-    #tags$li(
-    #  class = "clock-container",
-    #tags$span(
-     # id = "dynamic-clock"
-     # ),
-   # )
+    sidebarIcon = NULL,
+    controlbar = NULL
   ),
-  dashboardSidebar(
-    div(class = "logos",
-        img(src = "images/kenbright.png")
-    ),
-    tags$div(
-      class = "menu-container",
-    sidebarMenu(
-      menuItem("IRR Calculator", tabName = "irrCalculator", icon = icon("chart-line"))
-    )
-   )
-  ), 
+  dashboardSidebar(disable = TRUE), 
   dashboardBody(
     tags$head(
       includeCSS("www/css/custom_styles.css"),      
@@ -75,12 +54,8 @@ ui <- dashboardPage(
         href = "https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap", 
         rel = "stylesheet")
     ),
-    tabItems(
-      tabItem(tabName = "irrCalculator",
-              # Call the module UI with an ID (e.g., "irr")
-              irrCalcUI("irrCalculator")
-      )
-    )
+      irrCalcUI("irrCalculator")
+
   )
 )
 

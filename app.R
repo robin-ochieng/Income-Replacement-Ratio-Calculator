@@ -39,10 +39,10 @@ ui <- dashboardPage(
   fullscreen = FALSE,
   scrollToTop = TRUE,
   dashboardHeader(
-    disable = TRUE,
-    fixed = FALSE,
+    title = tags$div(class = "header-logo",
+                     img(src = "images/kenbright.png")),
     sidebarIcon = NULL,
-    controlbar = NULL
+    controlbarIcon = NULL
   ),
   dashboardSidebar(disable = TRUE), 
   dashboardBody(
@@ -54,7 +54,8 @@ ui <- dashboardPage(
         href = "https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap", 
         rel = "stylesheet")
     ),
-      irrCalcUI("irrCalculator")
+        # Then include your module UI    
+        irrCalcUI("irrCalculator")
 
   )
 )

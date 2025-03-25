@@ -39,8 +39,7 @@ ui <- dashboardPage(
   fullscreen = FALSE,
   scrollToTop = TRUE,
   dashboardHeader(
-    title = tags$div(class = "header-logo",
-                     img(src = "images/kenbright.png")),
+   # title = tags$div(class = "header-logo", img(src = "images/kenbright.png")),
     sidebarIcon = NULL,
     controlbarIcon = NULL
   ),

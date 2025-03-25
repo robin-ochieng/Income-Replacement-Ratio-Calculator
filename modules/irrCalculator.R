@@ -4,6 +4,7 @@
 irrCalcUI <- function(id) {
   ns <- NS(id)
   tagList(
+    shinyjs::useShinyjs(),
     fluidRow(
       column(
         width = 12,
@@ -155,42 +156,6 @@ irrCalcUI <- function(id) {
 irrCalcServer <- function(id) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
-
-    # When Translate button is clicked, trigger translation using the dropdown
-    observeEvent(input$translate, {
-      shinyjs::runjs("
-        function triggerTranslation() {
-          var combo = document.querySelector('.goog-te-combo');
-          if (combo) {
-            combo.value = 'fr';
-            // Create and dispatch a change event to trigger translation
-            var event = document.createEvent('HTMLEvents');
-            event.initEvent('change', true, true);
-            combo.dispatchEvent(event);
-          } else {
-            console.log('Google Translate combo element not found.');
-          }
-        }
-        // Allow extra time for the widget to load
-        setTimeout(triggerTranslation, 1500);
-      ")
-    })
-
-    # Button to toggle visibility of the language options (with scrolling).
-    observeEvent(input$toggleLanguages, {
-      shinyjs::runjs("
-        var el = document.getElementById('google_translate_element');
-        // If currently hidden off-screen, make it visible and scrollable.
-        if (el.style.left === '-9999px') {
-          el.style.left = '0';
-          el.style.position = 'relative';
-          el.style.maxHeight = '300px';
-          el.style.overflowY = 'auto';
-        } else {
-          el.style.left = '-9999px';
-        }
-      ")
-    })
     
     # Scroll to results box when compute is pressed
     observeEvent(input$compute, {

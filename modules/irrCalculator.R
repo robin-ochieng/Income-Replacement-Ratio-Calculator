@@ -4,25 +4,11 @@
 irrCalcUI <- function(id) {
   ns <- NS(id)
   tagList(
-    shinyjs::useShinyjs(),
-    # Include Google Translate scripts in the header
-    tags$head(
-      tags$script(src = "https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"),
-      tags$script(HTML("
-        function googleTranslateElementInit() {
-          new google.translate.TranslateElement({
-            pageLanguage: 'en', 
-            autoDisplay: false
-          }, 'google_translate_element');
-        }
-      "))
-    ),
-    # Position the Google Translate widget off-screen so it's still accessible
-    tags$div(id = "google_translate_element", style = "position: absolute; left: -9999px;"),
     fluidRow(
-      column(width = 12, align = "right",
-             actionButton(ns("translate"), "Translate to French", class = "btn-secondary control-button-translate"),
-             #actionButton(ns("toggleLanguages"), "More Language Options", class = "btn-secondary control-button-translate")
+      column(width = 12, align = "left",
+            div(class = "logos",
+                img(src = "images/kenbright.png")
+            )
       )
     ),
     fluidRow(
